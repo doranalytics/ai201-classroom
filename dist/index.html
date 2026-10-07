@@ -584,6 +584,90 @@
       .lab-chart-area {
         fill: url(#chartFill);
       }
+      .chart-controls {
+        display: flex;
+        gap: 6px;
+        margin-left: auto;
+      }
+      .chart-range {
+        border: 1px solid #29364c;
+        border-radius: 4px;
+        background: #0c1017;
+        color: #7e8ca4;
+        padding: 6px 8px;
+        font: 11px monospace;
+        cursor: pointer;
+        transition:
+          background 0.16s,
+          color 0.16s,
+          border-color 0.16s;
+      }
+      .chart-range:hover,
+      .chart-range:focus-visible {
+        color: #eaf2ff;
+        border-color: #4e8fe9;
+      }
+      .chart-range.active {
+        background: #16396f;
+        border-color: #4c91f1;
+        color: #cfe2ff;
+      }
+      .chart-shell {
+        position: relative;
+      }
+      .chart-hover-icon {
+        position: absolute;
+        top: 18px;
+        transform: translate(-50%, -50%) scale(0.86);
+        opacity: 0;
+        pointer-events: none;
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border: 1px solid #4c91f1;
+        border-radius: 8px;
+        background: #101d35;
+        color: #b9d5ff;
+        box-shadow: 0 5px 15px #0008;
+        font-size: 14px;
+        transition:
+          opacity 0.18s,
+          transform 0.18s;
+      }
+      .chart-shell:hover .chart-hover-icon,
+      .chart-shell:focus-within .chart-hover-icon {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      .chart-hover-icon.one {
+        left: 17%;
+        top: 72%;
+      }
+      .chart-hover-icon.two {
+        left: 50%;
+        top: 51%;
+      }
+      .chart-hover-icon.three {
+        left: 82%;
+        top: 26%;
+      }
+      .chart-hover-icon::after {
+        content: attr(data-label);
+        position: absolute;
+        left: 50%;
+        top: 31px;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        color: #8393ad;
+        font: 10px monospace;
+      }
+      @media (hover: none) {
+        .chart-hover-icon {
+          opacity: 0.82;
+          transform: translate(-50%, -50%) scale(0.92);
+        }
+      }
       .lab-legend {
         display: flex;
         justify-content: space-between;
@@ -890,8 +974,18 @@
         <div class="lab-grid">
           <article class="lab-panel lab-panel-wide">
             <div class="lab-panel-head">
-              <span class="lab-panel-title">Class progress</span
-              ><span class="lab-pill">This week</span>
+              <span class="lab-panel-title">Class progress</span>
+              <div class="chart-controls" role="group" aria-label="Chart range">
+                <button class="chart-range active" type="button" data-range="7">
+                  7D
+                </button>
+                <button class="chart-range" type="button" data-range="30">
+                  30D
+                </button>
+                <button class="chart-range" type="button" data-range="90">
+                  90D
+                </button>
+              </div>
             </div>
             <div class="lab-metrics">
               <div class="lab-metric">
@@ -904,38 +998,47 @@
                 <strong>+18%</strong><span>momentum</span>
               </div>
             </div>
-            <svg
-              class="lab-chart"
-              viewBox="0 0 560 124"
-              role="img"
-              aria-label="Class progress rising across six sessions"
+            <div
+              class="chart-shell"
+              tabindex="0"
+              aria-label="Hover to see activity icons on the class progress chart"
             >
-              <defs>
-                <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0" stop-color="#347ce8" stop-opacity=".35" />
-                  <stop offset="1" stop-color="#347ce8" stop-opacity="0" />
-                </linearGradient>
-              </defs>
-              <line class="lab-chart-grid" x1="0" y1="16" x2="560" y2="16" />
-              <line class="lab-chart-grid" x1="0" y1="52" x2="560" y2="52" />
-              <line class="lab-chart-grid" x1="0" y1="88" x2="560" y2="88" />
-              <path
-                class="lab-chart-area"
-                d="M0 102 L0 92 L92 83 L184 88 L276 57 L368 63 L460 28 L560 17 L560 102 Z"
-              />
-              <path
-                class="lab-chart-line"
-                d="M0 92 L92 83 L184 88 L276 57 L368 63 L460 28 L560 17"
-              />
-              <circle
-                cx="560"
-                cy="17"
-                r="5"
-                fill="#080a0f"
-                stroke="#72aaff"
-                stroke-width="3"
-              />
-            </svg>
+              <span class="chart-hover-icon one" data-label="prompt">✦</span>
+              <span class="chart-hover-icon two" data-label="build">⌘</span>
+              <span class="chart-hover-icon three" data-label="ship">↗</span>
+              <svg
+                class="lab-chart"
+                viewBox="0 0 560 124"
+                role="img"
+                aria-label="Class progress rising across six sessions"
+              >
+                <defs>
+                  <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#347ce8" stop-opacity=".35" />
+                    <stop offset="1" stop-color="#347ce8" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <line class="lab-chart-grid" x1="0" y1="16" x2="560" y2="16" />
+                <line class="lab-chart-grid" x1="0" y1="52" x2="560" y2="52" />
+                <line class="lab-chart-grid" x1="0" y1="88" x2="560" y2="88" />
+                <path
+                  class="lab-chart-area"
+                  d="M0 102 L0 92 L92 83 L184 88 L276 57 L368 63 L460 28 L560 17 L560 102 Z"
+                />
+                <path
+                  class="lab-chart-line"
+                  d="M0 92 L92 83 L184 88 L276 57 L368 63 L460 28 L560 17"
+                />
+                <circle
+                  cx="560"
+                  cy="17"
+                  r="5"
+                  fill="#080a0f"
+                  stroke="#72aaff"
+                  stroke-width="3"
+                />
+              </svg>
+            </div>
             <div class="lab-legend">
               <span>MON</span><span>TUE</span><span>WED</span><span>THU</span
               ><span>FRI</span><span>SAT</span><span>SUN</span>
@@ -1014,6 +1117,60 @@
         <span>Pick an idea. Build the first version.</span>
       </div>
     </main>
+    <script>
+      (() => {
+        const ranges = {
+          7: {
+            values: [46, 52, 49, 67, 63, 84, 88],
+            metrics: ["82%", "24", "+18%"],
+            label: "Class progress across the last 7 days",
+          },
+          30: {
+            values: [42, 48, 56, 60, 72, 78, 91],
+            metrics: ["74%", "68", "+24%"],
+            label: "Class progress across the last 30 days",
+          },
+          90: {
+            values: [34, 41, 49, 58, 70, 83, 96],
+            metrics: ["68%", "142", "+31%"],
+            label: "Class progress across the last 90 days",
+          },
+        };
+        const panel = document.querySelector(".lab-panel-wide");
+        if (!panel) return;
+        const line = panel.querySelector(".lab-chart-line");
+        const area = panel.querySelector(".lab-chart-area");
+        const chart = panel.querySelector(".lab-chart");
+        const metrics = [...panel.querySelectorAll(".lab-metric strong")];
+        const buttons = [...panel.querySelectorAll(".chart-range")];
+        const pathFor = (values) =>
+          values
+            .map(
+              (value, index) =>
+                `${index ? "L" : "M"}${index * (560 / (values.length - 1))} ${102 - value * 0.86}`,
+            )
+            .join(" ");
+        const update = (range) => {
+          const next = ranges[range];
+          const path = pathFor(next.values);
+          line.setAttribute("d", path);
+          area.setAttribute("d", `${path} L560 102 L0 102 Z`);
+          chart.setAttribute("aria-label", next.label);
+          metrics.forEach((metric, index) => {
+            metric.textContent = next.metrics[index];
+          });
+          buttons.forEach((button) => {
+            button.classList.toggle(
+              "active",
+              button.dataset.range === String(range),
+            );
+          });
+        };
+        buttons.forEach((button) =>
+          button.addEventListener("click", () => update(button.dataset.range)),
+        );
+      })();
+    </script>
     <footer>
       <span>AI 201 · Classroom toolkit</span
       ><span
